@@ -2,13 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define NAMESIZE	32
-
+//#define NAMESIZE	32
+#define NAMEMAX 	100
 
 struct st
 {
 	int id;
-	char name[NAMESIZE];
+	char *name;
 	int math;
 	int English;
 
@@ -39,25 +39,33 @@ void showMenu()
 
 void stu_set(struct st *p, const struct st *q)
 {
-	*p = *q;
+	p->id = q->id;
+    p->name = malloc(strlen(q->name)+1);
+    if (p->name == NULL)
+        exit(1);
+    strcpy(p->name,q->name);
+    p ->math = q->math;
+    p ->English =  q->English;
+
+
 }
 
 void stu_show(struct st *p)
 {
 	printf("%d  %s  %d %d\n", p->id,p->name,p->math,p->English);
-
-
 }
 
 void stu_changename(struct st *p,const char *newname)
 {
+    free(p->name);
+    p->name = malloc(strlen(newname)+1);
 	strcpy(p->name,newname);
 }
 
 int main()
 {
 	struct st stu,tmp;
-	char newname[NAMESIZE];
+	char newname[NAMEMAX];
 	int choice;
 	int ret;
 	do
@@ -71,6 +79,7 @@ int main()
 	switch(choice)
 	{
 		case 1:
+            tmp.name = malloc(NAMEMAX);
 			printf("Please enter [id name math English]\n");
 			scanf("%d%s%d%d", &tmp.id,tmp.name,&tmp.math,&tmp.English);
 			stu_set(&stu,&tmp);
